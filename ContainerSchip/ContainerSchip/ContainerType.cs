@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace ContainerSchip
 {
-    class Program
+    public enum ContainerType
     {
-        static void Main(string[] args)
-        {
-            
-        }
+        Regular,
+        Cooled,
+        Valuable
     }
 }
