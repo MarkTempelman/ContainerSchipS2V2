@@ -8,8 +8,8 @@ namespace ContainerSchip
 {
     public enum ContainerType
     {
-        Regular,
+        Valuable,
         Cooled,
-        Valuable
+        Regular
     }
 }
