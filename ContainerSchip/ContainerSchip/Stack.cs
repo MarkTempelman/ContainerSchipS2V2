@@ -8,7 +8,7 @@ namespace ContainerSchip
 {
     public class Stack
     {
-        public List<Container> Containers { get; private set; }
+        public List<IContainer> Containers { get; private set; }
         public int WidthCoordinates { get; }
         public int LengthCoordinates { get; }
         private static readonly int _maxWeightOnBottom = 120000;
@@ -19,7 +19,7 @@ namespace ContainerSchip
             LengthCoordinates = lengthCoordinates;
         }
 
-        public bool TryAddContainer(Container container)
+        public bool TryAddContainer(IContainer container)
         {
             
             if (IsContainerTooHeavyToAdd(container))
@@ -52,7 +52,7 @@ namespace ContainerSchip
             return Containers.Skip(1).Sum(c => c.Weight);
         }
 
-        private bool IsContainerTooHeavyToAdd(Container container)
+        private bool IsContainerTooHeavyToAdd(IContainer container)
         {
             return GetWeightOnBottomContainer() + container.Weight > _maxWeightOnBottom;
         }
@@ -69,7 +69,7 @@ namespace ContainerSchip
 
         private void MoveValuableToTop()
         {
-            Container vContainer = Containers.First(c => c.Type == ContainerType.Valuable);
+            IContainer vContainer = Containers.First(c => c.Type == ContainerType.Valuable);
             Containers = Containers.Where(c => c.Type != ContainerType.Valuable).ToList();
             Containers.Add(vContainer);
         }

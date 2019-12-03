@@ -9,11 +9,11 @@ namespace ContainerSchip
 {
     public class Ship
     {
-        public int Length { get; }
-        public int Width { get; }
+        private int Length { get; }
+        private int Width { get; }
         private List<Stack> Stacks { get; } = new List<Stack>();
         private readonly int _maxWeightOfStack = 150000;
-        private List<Container> _previousContainers;
+        private List<IContainer> _previousContainers = new List<IContainer>();
 
         public Ship(int length, int width)
         {
@@ -22,23 +22,44 @@ namespace ContainerSchip
             CreateStacks();
         }
 
-        public List<Container> PlaceContainers(List<Container> containers)
+        public List<IContainer> PlaceContainers(List<IContainer> containers)
         {
+            containers = OrderContainers(containers);
             foreach (var container in containers)
             {
-                if (container.Type == ContainerType.Valuable)
+                if (IsShipBalanced())
                 {
-                    if (OrderStacksByWeightOnBottom(GetFrontAndRearRows()).First().TryAddContainer(container))
+                    if (container.TryPlaceOnBalancedShip(this))
                     {
                         containers.Remove(container);
                     }
-                    else
+                }
+                else
+                {
+                    if (container.TryPlaceOnImbalancedShip(this))
                     {
-                        _previousContainers.Add(container);
+                        containers.Remove(container);
                     }
                 }
             }
+
+            if (HasContainerListChanged(containers))
+            {
+                _previousContainers = containers;
+                return PlaceContainers(containers);
+            }
+
             return containers;
+        }
+
+        public bool HasContainerListChanged(List<IContainer> containers)
+        {
+            return _previousContainers != containers;
+        }
+
+        public List<Stack> GetLightestSideOfShip()
+        {
+            if
         }
 
         private void CreateStacks()
@@ -57,9 +78,19 @@ namespace ContainerSchip
             return Width % 2 == 0;
         }
 
-        private List<Stack> GetFrontAndRearRows()
+        public List<Stack> GetFrontRow()
         {
-            return Stacks.Where(s => s.LengthCoordinates == 1 || s.LengthCoordinates == Length).ToList();
+            return Stacks.Where(s => s.LengthCoordinates == 1).ToList();
+        }
+
+        public List<Stack> GetRearRow()
+        {
+            return Stacks.Where(s => s.LengthCoordinates == Length).ToList();
+        }
+
+        public List<Stack> GetCoreRows()
+        {
+            return Stacks.Where(s => s.LengthCoordinates > 1 && s.LengthCoordinates < Length).ToList();
         }
 
         private bool IsShipBalanced()
@@ -67,12 +98,12 @@ namespace ContainerSchip
             return GetLeftWeight(GetLeftMaxRow()) == GetRightWeight(GetRightMinRow());
         }
 
-        private List<Stack> OrderStacksByWeightOnBottom(List<Stack> stacks)
+        public List<Stack> OrderStacksByWeightOnBottom(List<Stack> stacks)
         {
             return stacks.OrderBy(c => c.GetWeightOnBottomContainer()).ToList();
         }
 
-        private int GetCentreRow()
+        public int GetCentreRow()
         {
             double centre = (double) Width / 2;
             return Convert.ToInt32(Math.Ceiling(centre));
@@ -108,7 +139,7 @@ namespace ContainerSchip
             return Stacks.Where(s => s.WidthCoordinates >= rightMin).Sum(s => s.GetTotalWeight());
         }
 
-        private List<Container> OrderContainers(List<Container> containers)
+        private List<IContainer> OrderContainers(List<IContainer> containers)
         {
             return containers.OrderBy(c => c.Type).ThenByDescending(c => c.Weight).ToList();
         }
