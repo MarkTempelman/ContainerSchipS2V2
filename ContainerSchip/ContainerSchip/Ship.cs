@@ -11,7 +11,7 @@ namespace ContainerSchip
     {
         private int Length { get; }
         private int Width { get; }
-        private List<Stack> Stacks { get; } = new List<Stack>();
+        public List<Stack> Stacks { get; } = new List<Stack>();
         private readonly int _maxWeightOfStack = 150000;
         private List<IContainer> _previousContainers = new List<IContainer>();
 
@@ -59,7 +59,35 @@ namespace ContainerSchip
 
         public List<Stack> GetLightestSideOfShip()
         {
-            if
+            if (GetLeftWeight(GetLeftMaxRow()) < GetRightWeight(GetRightMinRow()))
+            {
+                return GetLeftStacks();
+            }
+            return GetRightStacks();
+        }
+
+        public List<Stack> GetHeaviestSideOfShip()
+        {
+            if (GetLeftWeight(GetLeftMaxRow()) > GetRightWeight(GetRightMinRow()))
+            {
+                return GetLeftStacks();
+            }
+            return GetRightStacks();
+        }
+
+        private List<Stack> GetLeftStacks()
+        {
+            return Stacks.Where(s => s.WidthCoordinates <= GetLeftMaxRow()).ToList();
+        }
+
+        private List<Stack> GetRightStacks()
+        {
+            return Stacks.Where(s => s.WidthCoordinates >= GetRightMinRow()).ToList();
+        }
+
+        public List<Stack> GetCentreStacks()
+        {
+            return Stacks.Where(s => s.WidthCoordinates == GetCentreRow()).ToList();
         }
 
         private void CreateStacks()
@@ -73,24 +101,25 @@ namespace ContainerSchip
             }
         }
 
-        private bool IsShipWidthEven()
+        public bool IsShipWidthEven()
         {
             return Width % 2 == 0;
         }
 
-        public List<Stack> GetFrontRow()
+
+        public List<Stack> GetFrontStacks(List<Stack> stacks)
         {
-            return Stacks.Where(s => s.LengthCoordinates == 1).ToList();
+            return stacks.Where(s => s.LengthCoordinates == 1).ToList();
         }
 
-        public List<Stack> GetRearRow()
+        public List<Stack> GetRearStacks(List<Stack> stacks)
         {
-            return Stacks.Where(s => s.LengthCoordinates == Length).ToList();
+            return stacks.Where(s => s.LengthCoordinates == Length).ToList();
         }
 
-        public List<Stack> GetCoreRows()
+        public List<Stack> GetCoreStacks(List<Stack> stacks)
         {
-            return Stacks.Where(s => s.LengthCoordinates > 1 && s.LengthCoordinates < Length).ToList();
+            return stacks.Where(s => s.LengthCoordinates > 1 && s.LengthCoordinates < Length).ToList();
         }
 
         private bool IsShipBalanced()
@@ -103,7 +132,7 @@ namespace ContainerSchip
             return stacks.OrderBy(c => c.GetWeightOnBottomContainer()).ToList();
         }
 
-        public int GetCentreRow()
+        private int GetCentreRow()
         {
             double centre = (double) Width / 2;
             return Convert.ToInt32(Math.Ceiling(centre));
@@ -147,6 +176,20 @@ namespace ContainerSchip
         private int WhatIs50PercentWeight()
         {
             return _maxWeightOfStack * Width * Length;
+        }
+
+        private int GetCurrentShipWeight()
+        {
+            return Stacks.Sum(stack => stack.GetTotalWeight());
+        }
+
+        public bool WillShipCapsizeIfContainerIsAdded(int weightToAdd)
+        {
+            if (GetLeftWeight(GetLeftMaxRow()) > GetRightWeight(GetRightMinRow()))
+            {
+                return (GetLeftWeight(GetLeftMaxRow()) + weightToAdd) / (GetCurrentShipWeight() + weightToAdd) * 100 > 60;
+            }
+            return (GetRightWeight(GetRightMinRow()) + weightToAdd) / (GetCurrentShipWeight() + weightToAdd) * 100 > 60;
         }
     }
 }

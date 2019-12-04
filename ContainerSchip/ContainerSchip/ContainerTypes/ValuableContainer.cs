@@ -20,16 +20,55 @@ namespace ContainerSchip.ContainerTypes
 
         public bool TryPlaceOnBalancedShip(Ship ship)
         {
-            if (ship.OrderStacksByWeightOnBottom(ship.GetRearRow()).First().TryAddContainer(this))
+            if (ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.Stacks)).First().TryAddContainer(this))
             {
                 return true;
             }
-            return ship.OrderStacksByWeightOnBottom(ship.GetFrontRow()).First().TryAddContainer(this);
+            return ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.Stacks)).First().TryAddContainer(this);
         }
 
         public bool TryPlaceOnImbalancedShip(Ship ship)
         {
-            throw new NotImplementedException();
+            if (ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.GetLightestSideOfShip())).First()
+                .TryAddContainer(this))
+            {
+                return true;
+            }
+
+            if (ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetLightestSideOfShip())).First()
+                .TryAddContainer(this))
+            {
+                return true;
+            }
+
+            if (!ship.IsShipWidthEven())
+            {
+                if (ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.GetCentreStacks())).First()
+                    .TryAddContainer(this))
+                {
+                    return true;
+                }
+                if (ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetCentreStacks())).First()
+                    .TryAddContainer(this))
+                {
+                    return true;
+                }
+            }
+
+            if (!ship.WillShipCapsizeIfContainerIsAdded(Weight))
+            {
+                if (ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.GetHeaviestSideOfShip())).First()
+                    .TryAddContainer(this))
+                {
+                    return true;
+                }
+                if (ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetHeaviestSideOfShip())).First()
+                    .TryAddContainer(this))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
