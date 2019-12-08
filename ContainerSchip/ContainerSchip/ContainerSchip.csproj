@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContainerTypes\CooledContainer.cs" />
+    <Compile Include="ContainerTypes\RegularContainer.cs" />
     <Compile Include="IContainer.cs" />
     <Compile Include="ContainerType.cs" />
     <Compile Include="ContainerTypes\ValuableContainer.cs" />
