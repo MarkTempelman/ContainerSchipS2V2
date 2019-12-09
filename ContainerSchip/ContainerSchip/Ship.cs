@@ -54,7 +54,7 @@ namespace ContainerSchip
 
         public bool HasContainerListChanged(List<IContainer> containers)
         {
-            return _previousContainers != containers;
+            return _previousContainers.Count != containers.Count;
         }
 
         public List<Stack> GetLightestSideOfShip()
