@@ -24,7 +24,7 @@ namespace ContainerSchip
 
         public List<IContainer> PlaceContainers(List<IContainer> containers)
         {
-            containers = OrderContainers(containers);
+            containers = SortContainers(containers);
             foreach (var container in containers)
             {
                 if (IsShipBalanced())
@@ -168,7 +168,7 @@ namespace ContainerSchip
             return Stacks.Where(s => s.WidthCoordinates >= rightMin).Sum(s => s.GetTotalWeight());
         }
 
-        private List<IContainer> OrderContainers(List<IContainer> containers)
+        private List<IContainer> SortContainers(List<IContainer> containers)
         {
             return containers.OrderBy(c => c.Type).ThenByDescending(c => c.Weight).ToList();
         }
