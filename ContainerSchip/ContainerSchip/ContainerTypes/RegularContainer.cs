@@ -9,12 +9,11 @@ namespace ContainerSchip.ContainerTypes
     public class RegularContainer : IContainer
     {
         public int Weight { get; }
-        public ContainerType Type { get; }
+        public ContainerType Type { get; } = ContainerType.Regular;
 
-        public RegularContainer(int weight, ContainerType type)
+        public RegularContainer(int weight)
         {
             Weight = weight;
-            Type = type;
         }
 
         public bool TryPlaceOnBalancedShip(Ship ship)

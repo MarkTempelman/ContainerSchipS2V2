@@ -9,13 +9,12 @@ namespace ContainerSchip.ContainerTypes
     public class ValuableContainer : IContainer
     {
         public int Weight { get; }
-        public ContainerType Type { get; }
+        public ContainerType Type { get; } = ContainerType.Valuable;
 
 
-        public ValuableContainer(int weight, ContainerType type)
+        public ValuableContainer(int weight)
         {
             Weight = weight;
-            Type = type;
         }
 
         public bool TryPlaceOnBalancedShip(Ship ship)

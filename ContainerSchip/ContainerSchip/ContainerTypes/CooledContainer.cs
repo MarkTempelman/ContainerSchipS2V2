@@ -9,12 +9,11 @@ namespace ContainerSchip.ContainerTypes
     public class CooledContainer : IContainer
     {
         public int Weight { get; }
-        public ContainerType Type { get; }
+        public ContainerType Type { get; } = ContainerType.Cooled;
 
-        public CooledContainer(int weight, ContainerType type)
+        public CooledContainer(int weight)
         {
             Weight = weight;
-            Type = type;
         }
 
         public bool TryPlaceOnBalancedShip(Ship ship)
