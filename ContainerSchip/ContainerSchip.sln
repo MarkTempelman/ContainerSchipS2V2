@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.902
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainerSchip", "ContainerSchip\ContainerSchip.csproj", "{C12664A6-DA9A-446D-833C-6CA4823E35C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainerSchipTest", "ContainerSchipTest\ContainerSchipTest.csproj", "{2F6CE05B-9451-4464-BEFB-AB6D3AD939FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C12664A6-DA9A-446D-833C-6CA4823E35C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C12664A6-DA9A-446D-833C-6CA4823E35C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C12664A6-DA9A-446D-833C-6CA4823E35C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F6CE05B-9451-4464-BEFB-AB6D3AD939FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F6CE05B-9451-4464-BEFB-AB6D3AD939FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F6CE05B-9451-4464-BEFB-AB6D3AD939FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F6CE05B-9451-4464-BEFB-AB6D3AD939FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
