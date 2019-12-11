@@ -14,7 +14,7 @@ namespace ContainerSchip
             Ship ship = new Ship(2,2);
             ship.PlaceContainers(new List<IContainer>()
             {
-                new CooledContainer(4000,ContainerType.Cooled)
+                new CooledContainer(4000)
             });
         }
     }

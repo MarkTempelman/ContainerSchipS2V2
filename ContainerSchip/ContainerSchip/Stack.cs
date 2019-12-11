@@ -8,7 +8,7 @@ namespace ContainerSchip
 {
     public class Stack
     {
-        public List<IContainer> Containers { get; private set; }
+        public List<IContainer> Containers { get; private set; } = new List<IContainer>();
         public int WidthCoordinates { get; }
         public int LengthCoordinates { get; }
         private static readonly int _maxWeightOnBottom = 120000;
@@ -44,7 +44,7 @@ namespace ContainerSchip
 
         public int GetWeightOnBottomContainer()
         {
-            if (Containers.Count < 1)
+            if (Containers.Count < 2)
             {
                 return 0;
             }
