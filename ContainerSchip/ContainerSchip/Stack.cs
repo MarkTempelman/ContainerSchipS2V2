@@ -8,7 +8,7 @@ namespace ContainerSchip
 {
     public class Stack
     {
-        public List<IContainer> Containers { get; private set; } = new List<IContainer>();
+        private List<IContainer> _containers = new List<IContainer>();
         public int WidthCoordinates { get; }
         public int LengthCoordinates { get; }
         private static readonly int _maxWeightOnBottom = 120000;
@@ -34,22 +34,22 @@ namespace ContainerSchip
                     return false;
                 }
 
-                Containers.Add(container);
+                _containers.Add(container);
                 MoveValuableToTop();
                 return true;
             }
-            Containers.Add(container);
+            _containers.Add(container);
             return true;
         }
 
         public int GetWeightOnBottomContainer()
         {
-            if (Containers.Count < 2)
+            if (_containers.Count < 2)
             {
                 return 0;
             }
 
-            return Containers.Skip(1).Sum(c => c.Weight);
+            return _containers.Skip(1).Sum(c => c.Weight);
         }
 
         private bool IsContainerTooHeavyToAdd(IContainer container)
@@ -59,19 +59,19 @@ namespace ContainerSchip
 
         public bool DoesStackContainValuable()
         {
-            return Containers.Any(c => c.Type == ContainerType.Valuable);
+            return _containers.Any(c => c.Type == ContainerType.Valuable);
         }
 
         public int GetTotalWeight()
         {
-            return Containers.Sum(c => c.Weight);
+            return _containers.Sum(c => c.Weight);
         }
 
         private void MoveValuableToTop()
         {
-            IContainer vContainer = Containers.First(c => c.Type == ContainerType.Valuable);
-            Containers = Containers.Where(c => c.Type != ContainerType.Valuable).ToList();
-            Containers.Add(vContainer);
+            IContainer vContainer = _containers.First(c => c.Type == ContainerType.Valuable);
+            _containers = _containers.Where(c => c.Type != ContainerType.Valuable).ToList();
+            _containers.Add(vContainer);
         }
     }
 }

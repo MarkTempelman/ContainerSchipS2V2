@@ -51,5 +51,16 @@ namespace Tests
 
             Assert.False(stack.TryAddContainer(v2Container));
         }
+
+        [Test]
+        public void TryAddContainer_AddRegularToFullStack_ReturnFalse()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                stack.TryAddContainer(new RegularContainer(30000));
+            }
+
+            Assert.False(stack.TryAddContainer(rContainer));
+        }
     }
 }
