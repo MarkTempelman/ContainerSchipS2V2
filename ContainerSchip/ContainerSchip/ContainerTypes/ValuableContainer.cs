@@ -11,10 +11,24 @@ namespace ContainerSchip.ContainerTypes
         public int Weight { get; }
         public ContainerType Type { get; } = ContainerType.Valuable;
 
+        private static int _minWeight = 4000;
+        private static int _maxWeight = 30000;
+
 
         public ValuableContainer(int weight)
         {
-            Weight = weight;
+            if (weight < _minWeight)
+            {
+                Weight = _minWeight;
+            }
+            else if (weight > _maxWeight)
+            {
+                Weight = _maxWeight;
+            }
+            else
+            {
+                Weight = weight;
+            }
         }
 
         public bool TryPlaceOnBalancedShip(Ship ship)

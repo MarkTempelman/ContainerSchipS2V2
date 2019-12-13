@@ -11,9 +11,23 @@ namespace ContainerSchip.ContainerTypes
         public int Weight { get; }
         public ContainerType Type { get; } = ContainerType.Cooled;
 
+        private static int _minWeight = 4000;
+        private static int _maxWeight = 30000;
+
         public CooledContainer(int weight)
         {
-            Weight = weight;
+            if (weight < _minWeight)
+            {
+                Weight = _minWeight;
+            }
+            else if (weight > _maxWeight)
+            {
+                Weight = _maxWeight;
+            }
+            else
+            {
+                Weight = weight;
+            }
         }
 
         public bool TryPlaceOnBalancedShip(Ship ship)
