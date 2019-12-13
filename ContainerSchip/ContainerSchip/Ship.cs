@@ -22,34 +22,35 @@ namespace ContainerSchip
             CreateStacks();
         }
 
-        public List<IContainer> PlaceContainers(List<IContainer> containers)
+        public List<IContainer> PlaceContainers(List<IContainer> currentContainers)
         {
-            containers = SortContainers(containers);
-            foreach (var container in containers)
+            currentContainers = SortContainers(currentContainers);
+            List<IContainer> newContainers = new List<IContainer>();
+            foreach (var container in currentContainers)
             {
                 if (IsShipBalanced())
                 {
-                    if (container.TryPlaceOnBalancedShip(this))
+                    if (!container.TryPlaceOnBalancedShip(this))
                     {
-                        containers.Remove(container);
+                        newContainers.Add(container);
                     }
                 }
                 else
                 {
-                    if (container.TryPlaceOnImbalancedShip(this))
+                    if (!container.TryPlaceOnImbalancedShip(this))
                     {
-                        containers.Remove(container);
+                        newContainers.Add(container);
                     }
                 }
             }
 
-            if (HasContainerListChanged(containers))
+            if (HasContainerListChanged(newContainers) && newContainers.Count > 0)
             {
-                _previousContainers = containers;
-                return PlaceContainers(containers);
+                _previousContainers = newContainers;
+                return PlaceContainers(newContainers);
             }
 
-            return containers;
+            return newContainers;
         }
 
         public bool HasContainerListChanged(List<IContainer> containers)
@@ -119,6 +120,15 @@ namespace ContainerSchip
 
         public List<Stack> GetCoreStacks(List<Stack> stacks)
         {
+            if (Length < 2)
+            {
+                return stacks;
+            }
+
+            if (Length < 3)
+            {
+                return stacks.Where(s => s.LengthCoordinates > 1).ToList();
+            }
             return stacks.Where(s => s.LengthCoordinates > 1 && s.LengthCoordinates < Length).ToList();
         }
 

@@ -1,13 +1,14 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection.Emit;
 using NUnit.Framework;
 using ContainerSchip;
 using ContainerSchip.ContainerTypes;
 using Stack = ContainerSchip.Stack;
 
-namespace Tests
+namespace ContainerSchipTest
 {
-    public class Tests
+    public class StackTests
     {
         private Stack stack;
         private IContainer rContainer;
@@ -61,6 +62,23 @@ namespace Tests
             }
 
             Assert.False(stack.TryAddContainer(rContainer));
+        }
+
+        [Test]
+        public void TryAddContainer_AddRegularToValuable_ValuableMovedToTop()
+        {
+            stack.TryAddContainer(vContainer);
+            stack.TryAddContainer(rContainer);
+
+            List<ContainerType> expected = new List<ContainerType>()
+            {
+                ContainerType.Regular,
+                ContainerType.Valuable
+            };
+
+            var actual = stack.GetContainerTypeOrder();
+
+            Assert.AreEqual(expected, actual);
         }
     }
 }

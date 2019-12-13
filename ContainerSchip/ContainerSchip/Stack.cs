@@ -73,5 +73,10 @@ namespace ContainerSchip
             _containers = _containers.Where(c => c.Type != ContainerType.Valuable).ToList();
             _containers.Add(vContainer);
         }
+
+        public List<ContainerType> GetContainerTypeOrder()
+        {
+            return _containers.Select(container => container.Type).ToList();
+        }
     }
 }
