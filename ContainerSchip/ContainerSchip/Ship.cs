@@ -15,10 +15,10 @@ namespace ContainerSchip
         private readonly int _maxWeightOfStack = 150000;
         private List<IContainer> _previousContainers = new List<IContainer>();
 
-        public Ship(int length, int width)
+        public Ship(int width, int length)
         {
-            Length = length;
             Width = width;
+            Length = length;
             CreateStacks();
         }
 

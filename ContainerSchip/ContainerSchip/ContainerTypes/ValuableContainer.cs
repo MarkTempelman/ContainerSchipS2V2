@@ -33,11 +33,23 @@ namespace ContainerSchip.ContainerTypes
 
         public bool TryPlaceOnBalancedShip(Ship ship)
         {
-            if (ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.Stacks)).First(s => !s.DoesStackContainValuable()).TryAddContainer(this))
+            Stack stack = ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.Stacks))
+                .FirstOrDefault(s => !s.DoesStackContainValuable());
+
+            if (stack != null)
             {
-                return true;
+                if(stack.TryAddContainer(this))
+                    return true;
             }
-            return ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.Stacks)).First(s => !s.DoesStackContainValuable()).TryAddContainer(this);
+
+            stack = ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.Stacks))
+                .FirstOrDefault(s => !s.DoesStackContainValuable());
+
+            if (stack != null)
+            {
+                return stack.TryAddContainer(this);
+            }
+            return false;
         }
 
         public bool TryPlaceOnImbalancedShip(Ship ship)
