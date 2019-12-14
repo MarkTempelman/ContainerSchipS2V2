@@ -77,7 +77,7 @@ namespace ContainerSchipTest
         }
 
         [Test]
-        public void PlaceContainers_6V12C27R_AllContainersPlaced()
+        public void PlaceContainers_6V12C27ROn3x3_AllContainersPlaced()
         {
             ship = new Ship(3, 3);
 
@@ -103,5 +103,5 @@ namespace ContainerSchipTest
             Assert.AreEqual(null, ship.Stacks.Where(s => s.LengthCoordinates == 2).FirstOrDefault(s => s.DoesStackContainValuable()));
             Assert.AreEqual(null, ship.Stacks.Where(s => s.LengthCoordinates > 1).FirstOrDefault(s => s.DoesStackContainCooled()));
         }
-    }
+    } 
 }
