@@ -77,38 +77,68 @@ namespace ContainerSchip.ContainerTypes
 
         private bool TryPlaceOnLightestSide(Ship ship)
         {
-            if (ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.GetLightestSideOfShip())).First(s => !s.DoesStackContainValuable())
-                .TryAddContainer(this))
+            Stack stack = ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.GetLightestSideOfShip()))
+                .FirstOrDefault(s => !s.DoesStackContainValuable());
+
+            if (stack != null)
             {
-                return true;
+                if (stack.TryAddContainer(this))
+                    return true;
             }
 
-            return ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetLightestSideOfShip())).First(s => !s.DoesStackContainValuable())
-                .TryAddContainer(this);
+            stack = ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetLightestSideOfShip()))
+                .FirstOrDefault(s => !s.DoesStackContainValuable());
+
+            if (stack != null)
+            {
+                return stack.TryAddContainer(this);
+            }
+
+            return false;
         }
 
         private bool TryPlaceInCentre(Ship ship)
         {
-            if (ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.GetCentreStacks())).First(s => !s.DoesStackContainValuable())
-                .TryAddContainer(this))
+            Stack stack = ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.GetCentreStacks()))
+                .FirstOrDefault(s => !s.DoesStackContainValuable());
+
+            if (stack != null)
             {
-                return true;
+                if (stack.TryAddContainer(this))
+                    return true;
             }
 
-            return ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetCentreStacks())).First(s => !s.DoesStackContainValuable())
-                .TryAddContainer(this);
+            stack = ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetCentreStacks()))
+                .FirstOrDefault(s => !s.DoesStackContainValuable());
+
+            if (stack != null)
+            {
+                return stack.TryAddContainer(this);
+            }
+
+            return false;
         }
 
         private bool TryPlaceOnHeaviestSide(Ship ship)
         {
-            if (ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.GetHeaviestSideOfShip())).First(s => !s.DoesStackContainValuable())
-                .TryAddContainer(this))
+            Stack stack = ship.OrderStacksByWeightOnBottom(ship.GetRearStacks(ship.GetHeaviestSideOfShip()))
+                .FirstOrDefault(s => !s.DoesStackContainValuable());
+
+            if (stack != null)
             {
-                return true;
+                if (stack.TryAddContainer(this))
+                    return true;
             }
 
-            return ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetHeaviestSideOfShip())).First(s => !s.DoesStackContainValuable())
-                .TryAddContainer(this);
+            stack = ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetHeaviestSideOfShip()))
+                .FirstOrDefault(s => !s.DoesStackContainValuable());
+
+            if (stack != null)
+            {
+                return stack.TryAddContainer(this);
+            }
+
+            return false;
         }
     }
 }
