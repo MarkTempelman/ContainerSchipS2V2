@@ -29,7 +29,8 @@ namespace ContainerSchipTest
             ship = new Ship(1, 1);
 
             Assert.AreEqual(0, ship.PlaceContainers(new List<IContainer>() { rContainer }).Count);
-            Assert.AreEqual(rContainer.Weight, ship.Stacks.First().GetTotalWeight());
+            Assert.AreEqual(ContainerType.Regular, ship.Stacks.First().GetContainerTypeOrder().First());
+            Assert.AreEqual(76000, ship.GetCurrentShipWeight());
         }
 
         [Test]
@@ -38,7 +39,7 @@ namespace ContainerSchipTest
             ship = new Ship(1, 1);
 
             Assert.AreEqual(0, ship.PlaceContainers(new List<IContainer>{rContainer, new RegularContainer(4000)}).Count);
-            Assert.AreEqual(rContainer.Weight + 4000, ship.Stacks.First().GetTotalWeight());
+            Assert.AreEqual(ContainerType.Regular, ship.Stacks.First().GetContainerTypeOrder().First());
         }
 
         [Test]
@@ -47,8 +48,8 @@ namespace ContainerSchipTest
             ship = new Ship(2 , 1);
 
             Assert.AreEqual(0, ship.PlaceContainers(new List<IContainer>{new RegularContainer(4000), new RegularContainer(4000)}).Count);
-            Assert.AreEqual(4000, ship.Stacks.First(s => s.WidthCoordinates == 1).GetTotalWeight());
-            Assert.AreEqual(4000, ship.Stacks.First(s => s.WidthCoordinates == 2).GetTotalWeight());
+            Assert.AreEqual(ContainerType.Regular, ship.Stacks.First(s => s.WidthCoordinates == 1).GetContainerTypeOrder().First());
+            Assert.AreEqual(ContainerType.Regular, ship.Stacks.First(s => s.WidthCoordinates == 2).GetContainerTypeOrder().First());
         }
 
         [Test]
@@ -59,7 +60,7 @@ namespace ContainerSchipTest
             Assert.AreEqual(0, ship.PlaceContainers(new List<IContainer>{rContainer, vContainer, cContainer}).Count);
             Assert.AreEqual(ContainerType.Cooled, ship.Stacks.First(s => s.LengthCoordinates == 1).GetContainerTypeOrder().First());
             Assert.AreEqual(ContainerType.Regular, ship.Stacks.First(s => s.LengthCoordinates == 2).GetContainerTypeOrder().First());
-            Assert.AreEqual(ContainerType.Valuable, ship.Stacks.First(s => s.LengthCoordinates == 3).GetContainerTypeOrder().First());
+            Assert.AreEqual(ContainerType.Valuable, ship.Stacks.First(s => s.LengthCoordinates == 3).GetContainerTypeOrder().Last());
         }
 
         [Test]
@@ -73,6 +74,34 @@ namespace ContainerSchipTest
                 new ValuableContainer(4000),
                 new ValuableContainer(4000)
             }).Count);
+        }
+
+        [Test]
+        public void PlaceContainers_6V12C27R_AllContainersPlaced()
+        {
+            ship = new Ship(3, 3);
+
+            List<IContainer> containers = new List<IContainer>();
+
+            for (int i = 0; i < 6; i++)
+            {
+                containers.Add(new ValuableContainer(30000));
+            }
+
+            for (int i = 0; i < 12; i++)
+            {
+                containers.Add(new CooledContainer(30000));
+            }
+
+            for (int i = 0; i < 27; i++)
+            {
+                containers.Add(new RegularContainer(30000));
+            }
+
+            Assert.AreEqual(0, ship.PlaceContainers(containers).Count);
+            Assert.AreEqual(1350000, ship.GetCurrentShipWeight());
+            Assert.AreEqual(null, ship.Stacks.Where(s => s.LengthCoordinates == 2).FirstOrDefault(s => s.DoesStackContainValuable()));
+            Assert.AreEqual(null, ship.Stacks.Where(s => s.LengthCoordinates > 1).FirstOrDefault(s => s.DoesStackContainCooled()));
         }
     }
 }

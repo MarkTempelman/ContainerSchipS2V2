@@ -4,6 +4,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ContainerSchip.ContainerTypes;
 
 namespace ContainerSchip
 {
@@ -28,19 +29,9 @@ namespace ContainerSchip
             List<IContainer> newContainers = new List<IContainer>();
             foreach (var container in currentContainers)
             {
-                if (IsShipBalanced())
+                if (!TryPlaceContainer(container))
                 {
-                    if (!container.TryPlaceOnBalancedShip(this))
-                    {
-                        newContainers.Add(container);
-                    }
-                }
-                else
-                {
-                    if (!container.TryPlaceOnImbalancedShip(this))
-                    {
-                        newContainers.Add(container);
-                    }
+                    newContainers.Add(container);
                 }
             }
 
@@ -50,7 +41,33 @@ namespace ContainerSchip
                 return PlaceContainers(newContainers);
             }
 
+            if (GetCurrentShipWeight() < WhatIsTotalMaxWeight() / 2)
+            {
+                TryPlaceContainer(new RegularContainer(4000));
+                return PlaceContainers(newContainers);
+            }
+
             return newContainers;
+        }
+
+        private bool TryPlaceContainer(IContainer container)
+        {
+            if (IsShipBalanced())
+            {
+                if (!container.TryPlaceOnBalancedShip(this))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (!container.TryPlaceOnImbalancedShip(this))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public bool HasContainerListChanged(List<IContainer> containers)
@@ -183,12 +200,12 @@ namespace ContainerSchip
             return containers.OrderBy(c => c.Type).ThenByDescending(c => c.Weight).ToList();
         }
 
-        private int WhatIs50PercentWeight()
+        private int WhatIsTotalMaxWeight()
         {
             return _maxWeightOfStack * Width * Length;
         }
 
-        private int GetCurrentShipWeight()
+        public int GetCurrentShipWeight()
         {
             return Stacks.Sum(stack => stack.GetTotalWeight());
         }

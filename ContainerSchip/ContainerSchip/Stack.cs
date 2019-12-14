@@ -62,6 +62,11 @@ namespace ContainerSchip
             return _containers.Any(c => c.Type == ContainerType.Valuable);
         }
 
+        public bool DoesStackContainCooled()
+        {
+            return _containers.Any(c => c.Type == ContainerType.Cooled);
+        }
+
         public int GetTotalWeight()
         {
             return _containers.Sum(c => c.Weight);
