@@ -14,7 +14,6 @@ namespace ContainerSchip
         private int Width { get; }
         public List<Stack> Stacks { get; } = new List<Stack>();
         private readonly int _maxWeightOfStack = 150000;
-        private List<IContainer> _previousContainers = new List<IContainer>();
 
         public Ship(int width, int length)
         {
@@ -37,13 +36,6 @@ namespace ContainerSchip
                     }
                 }
 
-                if (HasContainerListChanged(newContainers) && newContainers.Count > 0)
-                {
-                    _previousContainers = newContainers;
-                    currentContainers = newContainers;
-                    continue;
-                }
-
                 if (GetCurrentShipWeight() < WhatIsTotalMaxWeight() / 2)
                 {
                     TryPlaceContainer(new RegularContainer(4000));
@@ -60,10 +52,6 @@ namespace ContainerSchip
             return container.TryPlaceOnBalancedShip(this);
         }
 
-        public bool HasContainerListChanged(List<IContainer> containers)
-        {
-            return _previousContainers.Count != containers.Count;
-        }
 
         private void CreateStacks()
         {
