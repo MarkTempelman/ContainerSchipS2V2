@@ -25,87 +25,44 @@ namespace ContainerSchip
 
         public List<IContainer> PlaceContainers(List<IContainer> currentContainers)
         {
-            currentContainers = SortContainers(currentContainers);
-            List<IContainer> newContainers = new List<IContainer>();
-            foreach (var container in currentContainers)
+            while (true)
             {
-                if (!TryPlaceContainer(container))
+                currentContainers = SortContainers(currentContainers);
+                List<IContainer> newContainers = new List<IContainer>();
+                foreach (var container in currentContainers)
                 {
-                    newContainers.Add(container);
+                    if (!TryPlaceContainer(container))
+                    {
+                        newContainers.Add(container);
+                    }
                 }
-            }
 
-            if (HasContainerListChanged(newContainers) && newContainers.Count > 0)
-            {
-                _previousContainers = newContainers;
-                return PlaceContainers(newContainers);
-            }
+                if (HasContainerListChanged(newContainers) && newContainers.Count > 0)
+                {
+                    _previousContainers = newContainers;
+                    currentContainers = newContainers;
+                    continue;
+                }
 
-            if (GetCurrentShipWeight() < WhatIsTotalMaxWeight() / 2)
-            {
-                TryPlaceContainer(new RegularContainer(4000));
-                return PlaceContainers(newContainers);
-            }
+                if (GetCurrentShipWeight() < WhatIsTotalMaxWeight() / 2)
+                {
+                    TryPlaceContainer(new RegularContainer(4000));
+                    currentContainers = newContainers;
+                    continue;
+                }
 
-            return newContainers;
+                return newContainers;
+            }
         }
 
         private bool TryPlaceContainer(IContainer container)
         {
-            if (IsShipBalanced())
-            {
-                if (!container.TryPlaceOnBalancedShip(this))
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if (!container.TryPlaceOnImbalancedShip(this))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return container.TryPlaceOnBalancedShip(this);
         }
 
         public bool HasContainerListChanged(List<IContainer> containers)
         {
             return _previousContainers.Count != containers.Count;
-        }
-
-        public List<Stack> GetLightestSideOfShip()
-        {
-            if (GetLeftWeight(GetLeftMaxRow()) < GetRightWeight(GetRightMinRow()))
-            {
-                return GetLeftStacks();
-            }
-            return GetRightStacks();
-        }
-
-        public List<Stack> GetHeaviestSideOfShip()
-        {
-            if (GetLeftWeight(GetLeftMaxRow()) > GetRightWeight(GetRightMinRow()))
-            {
-                return GetLeftStacks();
-            }
-            return GetRightStacks();
-        }
-
-        private List<Stack> GetLeftStacks()
-        {
-            return Stacks.Where(s => s.WidthCoordinates <= GetLeftMaxRow()).ToList();
-        }
-
-        private List<Stack> GetRightStacks()
-        {
-            return Stacks.Where(s => s.WidthCoordinates >= GetRightMinRow()).ToList();
-        }
-
-        public List<Stack> GetCentreStacks()
-        {
-            return Stacks.Where(s => s.WidthCoordinates == GetCentreRow()).ToList();
         }
 
         private void CreateStacks()
@@ -118,12 +75,6 @@ namespace ContainerSchip
                 }
             }
         }
-
-        public bool IsShipWidthEven()
-        {
-            return Width % 2 == 0;
-        }
-
 
         public List<Stack> GetFrontStacks(List<Stack> stacks)
         {
@@ -149,50 +100,9 @@ namespace ContainerSchip
             return stacks.Where(s => s.LengthCoordinates > 1 && s.LengthCoordinates < Length).ToList();
         }
 
-        private bool IsShipBalanced()
-        {
-            return GetLeftWeight(GetLeftMaxRow()) == GetRightWeight(GetRightMinRow());
-        }
-
         public List<Stack> OrderStacksByWeightOnBottom(List<Stack> stacks)
         {
             return stacks.OrderBy(c => c.GetWeightOnBottomContainer()).ToList();
-        }
-
-        private int GetCentreRow()
-        {
-            double centre = (double) Width / 2;
-            return Convert.ToInt32(Math.Ceiling(centre));
-        }
-
-        private int GetLeftMaxRow()
-        {
-            if (IsShipWidthEven())
-            {
-                return Width / 2;
-            }
-
-            return GetCentreRow() - 1;
-        }
-
-        private int GetRightMinRow()
-        {
-            if (IsShipWidthEven())
-            {
-                return (Width / 2 + 1);
-            }
-
-            return GetCentreRow() + 1;
-        }
-
-        private int GetLeftWeight(int leftMax)
-        {
-            return Stacks.Where(s => s.WidthCoordinates <= leftMax).Sum(s => s.GetTotalWeight());
-        }
-
-        private int GetRightWeight(int rightMin)
-        {
-            return Stacks.Where(s => s.WidthCoordinates >= rightMin).Sum(s => s.GetTotalWeight());
         }
 
         private List<IContainer> SortContainers(List<IContainer> containers)
@@ -208,15 +118,6 @@ namespace ContainerSchip
         public int GetCurrentShipWeight()
         {
             return Stacks.Sum(stack => stack.GetTotalWeight());
-        }
-
-        public bool WillShipCapsizeIfContainerIsAdded(int weightToAdd)
-        {
-            if (GetLeftWeight(GetLeftMaxRow()) > GetRightWeight(GetRightMinRow()))
-            {
-                return (GetLeftWeight(GetLeftMaxRow()) + weightToAdd) / (GetCurrentShipWeight() + weightToAdd) * 100 > 60;
-            }
-            return (GetRightWeight(GetRightMinRow()) + weightToAdd) / (GetCurrentShipWeight() + weightToAdd) * 100 > 60;
         }
     }
 }

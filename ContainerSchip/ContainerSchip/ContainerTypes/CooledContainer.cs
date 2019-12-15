@@ -34,33 +34,5 @@ namespace ContainerSchip.ContainerTypes
         {
             return ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.Stacks)).First().TryAddContainer(this);
         }
-
-        public bool TryPlaceOnImbalancedShip(Ship ship)
-        {
-            if (ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetLightestSideOfShip())).First()
-                .TryAddContainer(this))
-            {
-                return true;
-            }
-
-            if (!ship.IsShipWidthEven())
-            {
-                if (ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetCentreStacks())).First()
-                    .TryAddContainer(this))
-                {
-                    return true;
-                }
-            }
-
-            if (!ship.WillShipCapsizeIfContainerIsAdded(Weight))
-            {
-                if (ship.OrderStacksByWeightOnBottom(ship.GetFrontStacks(ship.GetHeaviestSideOfShip())).First()
-                    .TryAddContainer(this))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }

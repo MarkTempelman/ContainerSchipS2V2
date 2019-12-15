@@ -12,6 +12,6 @@ namespace ContainerSchip
         ContainerType Type { get; }
 
         bool TryPlaceOnBalancedShip(Ship ship);
-        bool TryPlaceOnImbalancedShip(Ship ship);
+        //bool TryPlaceOnImbalancedShip(Ship ship);
     }
 }
