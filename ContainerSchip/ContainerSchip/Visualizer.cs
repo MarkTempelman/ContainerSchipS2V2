@@ -17,8 +17,14 @@ namespace ContainerSchip
             url += ship.Width.ToString();
             url += "&stacks=";
 
+            url = AddContainersToString(url, ship);
+            url = AddContainerWeightToString(url, ship);
 
+            return url;
+        }
 
+        private string AddContainersToString(string url, Ship ship)
+        {
             for (int i = 1; i <= ship.Width; i++)
             {
                 var row = ship.Stacks.Where(s => s.WidthCoordinates == i).OrderBy(s => s.LengthCoordinates).ToList();
@@ -39,14 +45,17 @@ namespace ContainerSchip
                             url += 1.ToString();
                         }
                     }
-
                     url += ",";
                 }
-
                 url = url.TrimEnd(',');
                 url += "/";
             }
             url = url.TrimEnd('/');
+            return url;
+        }
+
+        private string AddContainerWeightToString(string url, Ship ship)
+        {
             url += "&weights=";
 
             for (int i = 1; i <= ship.Width; i++)
@@ -66,7 +75,6 @@ namespace ContainerSchip
                 url += "/";
             }
             url = url.TrimEnd('/');
-
             return url;
         }
     }
