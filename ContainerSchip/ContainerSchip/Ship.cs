@@ -10,8 +10,8 @@ namespace ContainerSchip
 {
     public class Ship
     {
-        private int Length { get; }
-        private int Width { get; }
+        public int Length { get; }
+        public int Width { get; }
         public List<Stack> Stacks { get; } = new List<Stack>();
         private readonly int _maxWeightOfStack = 150000;
 

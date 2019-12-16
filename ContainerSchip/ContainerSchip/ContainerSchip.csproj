@@ -51,7 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ship.cs" />
     <Compile Include="Stack.cs" />
-    <Compile Include="UserInterface.cs" />
+    <Compile Include="Visualizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

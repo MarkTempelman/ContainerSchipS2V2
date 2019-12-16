@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ContainerSchip.ContainerTypes;
 
 namespace ContainerSchip
 {
@@ -77,6 +78,11 @@ namespace ContainerSchip
             IContainer vContainer = _containers.First(c => c.Type == ContainerType.Valuable);
             _containers = _containers.Where(c => c.Type != ContainerType.Valuable).ToList();
             _containers.Add(vContainer);
+        }
+
+        public List<IContainer> GetContainers()
+        {
+            return _containers;
         }
 
         public List<ContainerType> GetContainerTypeOrder()
