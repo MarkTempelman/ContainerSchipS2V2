@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ContainerSchip.ContainerTypes;
 
 namespace ContainerSchip
 {
@@ -76,6 +77,48 @@ namespace ContainerSchip
             }
             url = url.TrimEnd('/');
             return url;
+        }
+
+        public void VisualizeRandomShip()
+        {
+            Ship ship = GenerateRandomShip();
+            List<IContainer> containers = GenerateRandomContainersForShip(ship);
+            ship.PlaceContainers(containers);
+            
+            System.Diagnostics.Process.Start(GetUrl(ship));
+        }
+
+        public Ship GenerateRandomShip()
+        {
+            Random rnd = new Random();
+            int width = rnd.Next(2, 6);
+            int length = rnd.Next(2, 10);
+
+            return new Ship(width, length);
+        }
+
+        public List<IContainer> GenerateRandomContainersForShip(Ship ship)
+        {
+            List<IContainer> containers = new List<IContainer>();
+            Random rnd = new Random();
+            int amountOfValuable = rnd.Next(1, ship.Width * 2);
+            int amountOfCooled = rnd.Next(1, ship.Width * 9);
+            int amountOfRegular = rnd.Next((ship.Width * (ship.Length - 2) * 11) + ship.Width * 9);
+
+            for (int i = 0; i < amountOfValuable; i++)
+            {
+                containers.Add(new ValuableContainer(rnd.Next(4, 30) * 1000));
+            }
+            for (int i = 0; i < amountOfCooled; i++)
+            {
+                containers.Add(new CooledContainer(rnd.Next(4, 30) * 1000));
+            }
+            for (int i = 0; i < amountOfRegular; i++)
+            {
+                containers.Add(new RegularContainer(rnd.Next(4, 30) * 1000));
+            }
+
+            return containers;
         }
     }
 }
