@@ -5,6 +5,7 @@ using System.Text;
 using ContainerSchip;
 using ContainerSchip.ContainerTypes;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace ContainerSchipTest
 {
@@ -53,7 +54,7 @@ namespace ContainerSchipTest
         }
 
         [Test]
-        public void PlaceContainers_1R1C1VOn1x3_ContainersPlaced()
+        public void PlaceContainers_1R1C1VOn1x3_ContainersPlacedAddedEmptyContainerToReachMinWeight()
         {
             ship = new Ship(1, 3);
             
@@ -61,6 +62,14 @@ namespace ContainerSchipTest
             Assert.AreEqual(ContainerType.Cooled, ship.Stacks.First(s => s.LengthCoordinates == 1).GetContainerTypeOrder().First());
             Assert.AreEqual(ContainerType.Regular, ship.Stacks.First(s => s.LengthCoordinates == 2).GetContainerTypeOrder().First());
             Assert.AreEqual(ContainerType.Valuable, ship.Stacks.First(s => s.LengthCoordinates == 3).GetContainerTypeOrder().Last());
+        }
+
+        [Test]
+        public void PlaceContainers_1R_PlacedAdditionalContainersToReachMinWeight()
+        {
+            ship = new Ship(1,1);
+            Assert.AreEqual(0, ship.PlaceContainers(new List<IContainer> {rContainer}).Count);
+            Assert.LessOrEqual(75000, ship.GetCurrentShipWeight());
         }
 
         [Test]
