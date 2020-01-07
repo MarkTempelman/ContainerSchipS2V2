@@ -62,6 +62,7 @@ namespace ContainerSchipTest
             Assert.AreEqual(ContainerType.Cooled, ship.Stacks.First(s => s.LengthCoordinates == 1).GetContainerTypeOrder().First());
             Assert.AreEqual(ContainerType.Regular, ship.Stacks.First(s => s.LengthCoordinates == 2).GetContainerTypeOrder().First());
             Assert.AreEqual(ContainerType.Valuable, ship.Stacks.First(s => s.LengthCoordinates == 3).GetContainerTypeOrder().Last());
+            Assert.LessOrEqual(225000, ship.GetCurrentShipWeight());
         }
 
         [Test]
